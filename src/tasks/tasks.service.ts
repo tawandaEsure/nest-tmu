@@ -1,4 +1,4 @@
-import { Injectable, ParseUUIDPipe } from '@nestjs/common';
+import { Injectable, NotFoundException, ParseUUIDPipe } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
 import { v1 as uuidv1 } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto.ts';
@@ -13,7 +13,13 @@ export class TasksService {
   }
 
   getTaskById(id: string): Task {
-    return this.tasks.find(task => task.id === id);
+    const found = this.tasks.find(task => task.id === id);
+
+    if(!found){
+      throw new NotFoundException(`Task with ID "${id}" not found`);
+    }
+
+    return found;
   }
 
   getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
@@ -50,7 +56,9 @@ export class TasksService {
 
   // Multiple ways to delete tasks especially in Js (all data in memory for tutorial)
   deleteTask(id: string): void {
-    this.tasks = this.tasks.filter(task => task.id !== id);
+    const found = this.getTaskById(id);
+    // splicing is more effecient
+    this.tasks = this.tasks.filter(task => task.id !== found.id);
   }
 
   updateTaskStatus(id: string, status: TaskStatus): Task {
