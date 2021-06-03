@@ -1,0 +1,25 @@
+version: 1
+update_configs:
+  - package_manager: "javascript"
+    directory: "/"
+    update_schedule: "daily"
+    allowed_updates:
+      - match:
+          dependency_type: "development"
+          # Supported dependency types:
+          # - "development"
+          #   Development dependency group (supported by some package managers)
+          # - "production"
+          #   Production dependency group (supported by some package managers)
+          # - "direct"
+          #   Direct/top-level dependencies
+          # - "indirect"
+          #   Indirect/transient/sub-dependencies
+          # - "all"
+          update_type: "all"
+          # Supported update types:
+          # - "security"
+          # - "all"
+      - match:
+          dependency_type: "production"
+          update_type: "security"
